@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>NexaBoard · Analytics Dashboard</title>
+<link rel="stylesheet" href="style.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+</head>
+<body>
+
+<div class="overlay" id="overlay"></div>
+
+<!-- ════════════════════════════════════════
+     SIDEBAR
+════════════════════════════════════════ -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-logo" id="brandLogo">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+        <rect x="3" y="3" width="7" height="7" rx="1.5" fill="white" opacity=".9"/>
+        <rect x="14" y="3" width="7" height="7" rx="1.5" fill="white" opacity=".55"/>
+        <rect x="3" y="14" width="7" height="7" rx="1.5" fill="white" opacity=".55"/>
+        <rect x="14" y="14" width="7" height="7" rx="1.5" fill="white" opacity=".9"/>
+      </svg>
+    </div>
+    <div class="brand-text">
+      <div class="name">NexaBoard</div>
+      <div class="ver">v2.1 · BETA</div>
+    </div>
+  </div>
+
+  <nav class="sidebar-nav">
+    <div class="nav-label">Main</div>
+    <ul class="nav-ul">
+      <li class="nav-item active" data-page="dashboard">
+        <svg class="n-icon" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        Dashboard
+        <span class="n-pill">3</span>
+      </li>
+      <li class="nav-item" data-page="analytics">
+        <svg class="n-icon" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        Analytics
+      </li>
+      <li class="nav-item" data-page="revenue">
+        <svg class="n-icon" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        Revenue
+      </li>
+    </ul>
+    <div class="nav-label">Manage</div>
+    <ul class="nav-ul">
+      <li class="nav-item" data-page="users">
+        <svg class="n-icon" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Users
+      </li>
+      <li class="nav-item" data-page="reports">
+        <svg class="n-icon" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        Reports
+      </li>
+    </ul>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="user-av" title="Profile">
+      FA
+      <div class="av-dot"></div>
+    </div>
+    <div class="u-info">
+      <div class="u-name">Fatima Akbar</div>
+      <div class="u-role">Administrator</div>
+    </div>
+    <button class="theme-btn" id="themeBtn" title="Toggle theme">
+      <svg id="themeIco" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/>
+        <line x1="12" y1="21" x2="12" y2="23"/>
+        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+        <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+      </svg>
+    </button>
+  </div>
+</aside>
+
+<!-- ════════════════════════════════════════
+     TOPBAR
+════════════════════════════════════════ -->
+<div class="topbar">
+  <div class="topbar-left">
+    <button class="ham" id="ham"><span></span><span></span><span></span></button>
+    <div class="searchbar">
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" placeholder="Search users, pages, reports…" id="globalSearch"/>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <div class="clock" id="clock">–</div>
+    <button class="icon-btn" id="notifBtn" title="Notifications">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      <span class="n-dot" id="nBadge">3</span>
+    </button>
+    <button class="icon-btn" id="refreshBtn" title="Refresh data">
+      <svg id="refreshIco" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+    </button>
+    <button class="icon-btn" title="Settings" onclick="toast('⚙️ Settings panel coming soon!')">
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- Notification panel -->
+<div class="notif-panel" id="notifPanel">
+  <div class="notif-head">
+    <h4>Notifications</h4>
+    <button class="btn btn-ghost btn-sm" id="clearNotif">Clear all</button>
+  </div>
+  <ul class="notif-list" id="notifList"></ul>
+</div>
+
+<!-- ════════════════════════════════════════
+     MAIN CONTENT
+════════════════════════════════════════ -->
+<main class="main">
+<div class="content">
+
+<!-- ══ DASHBOARD ══ -->
+<section class="page active" id="page-dashboard">
+  <div class="page-head">
+    <div>
+      <div class="page-eyebrow">Overview</div>
+      <h1 class="page-title">Dashboard</h1>
+      <p class="page-sub">Welcome back, Ali. Here's your business at a glance.</p>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+      <button class="btn btn-ghost" onclick="toast('📥 Generating report…')">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Export
+      </button>
+      <button class="btn btn-primary" onclick="toast('📊 New report created!')">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        New Report
+      </button>
+    </div>
+  </div>
+
+  <!-- KPI Cards -->
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-top">
+        <span class="kpi-label">Total Revenue</span>
+        <div class="kpi-ico g"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+      </div>
+      <div class="kpi-val" id="kv1">$0</div>
+      <div class="spark-wrap"><canvas id="sp1"></canvas></div>
+      <div class="kpi-foot">
+        <svg class="up" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg>
+        <span class="up">+12.5%</span>
+        <span class="label">vs last month</span>
+      </div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-top">
+        <span class="kpi-label">Active Users</span>
+        <div class="kpi-ico b"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+      </div>
+      <div class="kpi-val" id="kv2">0</div>
+      <div class="spark-wrap"><canvas id="sp2"></canvas></div>
+      <div class="kpi-foot">
+        <svg class="up" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg>
+        <span class="up">+8.2%</span>
+        <span class="label">vs last month</span>
+      </div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-top">
+        <span class="kpi-label">Bounce Rate</span>
+        <div class="kpi-ico o"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+      </div>
+      <div class="kpi-val" id="kv3">0%</div>
+      <div class="spark-wrap"><canvas id="sp3"></canvas></div>
+      <div class="kpi-foot">
+        <svg class="up" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg>
+        <span class="up">−3.1%</span>
+        <span class="label">improved</span>
+      </div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-top">
+        <span class="kpi-label">Conversion Rate</span>
+        <div class="kpi-ico p"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+      </div>
+      <div class="kpi-val" id="kv4">0%</div>
+      <div class="spark-wrap"><canvas id="sp4"></canvas></div>
+      <div class="kpi-foot">
+        <svg class="up" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg>
+        <span class="up">+0.5%</span>
+        <span class="label">vs last month</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Revenue + Traffic -->
+  <div class="grid-2-1">
+    <div class="card">
+      <div class="card-header">
+        <div><div class="card-title">Revenue Overview</div><div class="card-sub">Monthly revenue vs target</div></div>
+        <div class="controls">
+          <button class="chip active" data-range="6m">6M</button>
+          <button class="chip" data-range="1y">1Y</button>
+          <button class="chip" data-range="2y">2Y</button>
+        </div>
+      </div>
+      <div class="chart-box"><canvas id="revChart"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div><div class="card-title">Traffic Sources</div><div class="card-sub">This month's breakdown</div></div>
+      </div>
+      <div class="chart-box sm"><canvas id="trafficChart"></canvas></div>
+      <div class="legend" id="trafficLeg" style="margin-top:14px"></div>
+    </div>
+  </div>
+
+  <!-- Activity + Products -->
+  <div class="grid-1-1">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Recent Activity</div>
+        <button class="btn btn-ghost btn-sm">View all</button>
+      </div>
+      <ul class="act-list" id="actList"></ul>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Top Products</div>
+        <button class="btn btn-ghost btn-sm">View all</button>
+      </div>
+      <ul class="prod-list" id="prodList"></ul>
+    </div>
+  </div>
+</section>
+
+<!-- ══ ANALYTICS ══ -->
+<section class="page" id="page-analytics">
+  <div class="page-head">
+    <div>
+      <div class="page-eyebrow">Insights</div>
+      <h1 class="page-title">Analytics</h1>
+      <p class="page-sub">Deep dive into visitor behaviour and page performance.</p>
+    </div>
+    <button class="btn btn-primary" onclick="toast('📤 Exporting analytics data…')">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Export Report
+    </button>
+  </div>
+
+  <div class="grid-2-1">
+    <div class="card">
+      <div class="card-header">
+        <div><div class="card-title">Daily Visitors</div><div class="card-sub">Last 30 days</div></div>
+      </div>
+      <div class="chart-box lg"><canvas id="visChart"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div><div class="card-title">Device Split</div><div class="card-sub">Traffic by device type</div></div>
+      </div>
+      <div class="chart-box sm"><canvas id="devChart"></canvas></div>
+      <div class="legend" id="devLeg" style="margin-top:14px"></div>
+    </div>
+  </div>
+
+  <div class="grid-1">
+    <div class="card">
+      <div class="card-header">
+        <div><div class="card-title">Page Performance</div><div class="card-sub">Load time (line) vs sessions (bars) per page</div></div>
+      </div>
+      <div class="chart-box"><canvas id="perfChart"></canvas></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ REVENUE ══ -->
+<section class="page" id="page-revenue">
+  <div class="page-head">
+    <div>
+      <div class="page-eyebrow">Finance</div>
+      <h1 class="page-title">Revenue</h1>
+      <p class="page-sub">Financial performance, projections and category breakdown.</p>
+    </div>
+    <button class="btn btn-primary" onclick="toast('📥 Downloading P&amp;L report…')">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Download P&amp;L
+    </button>
+  </div>
+  <div class="stat-row" id="statRow"></div>
+  <div class="grid-1-1">
+    <div class="card">
+      <div class="card-header"><div><div class="card-title">Revenue by Category</div><div class="card-sub">This quarter</div></div></div>
+      <div class="chart-box lg"><canvas id="catChart"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div><div class="card-title">Monthly Trend</div><div class="card-sub">12-month revenue vs target</div></div></div>
+      <div class="chart-box lg"><canvas id="trendChart"></canvas></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ USERS ══ -->
+<section class="page" id="page-users">
+  <div class="page-head">
+    <div>
+      <div class="page-eyebrow">Team</div>
+      <h1 class="page-title">Users</h1>
+      <p class="page-sub">Manage and monitor all user accounts.</p>
+    </div>
+    <button class="btn btn-primary" onclick="toast('👤 Add user form — coming soon!')">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Add User
+    </button>
+  </div>
+  <div class="card" style="padding:0;overflow:hidden">
+    <div class="tbl-bar">
+      <input type="text" class="tbl-search" placeholder="Search users…" id="userSearch"/>
+      <select class="sel" id="roleFilter"><option value="">All Roles</option><option>Admin</option><option>Editor</option><option>Viewer</option></select>
+      <select class="sel" id="statusFilter"><option value="">All Status</option><option>Active</option><option>Inactive</option></select>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th data-col="name">User</th>
+            <th data-col="email">Email</th>
+            <th data-col="role">Role</th>
+            <th data-col="status">Status</th>
+            <th data-col="joined">Joined</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="usersBody"></tbody>
+      </table>
+    </div>
+    <div class="tbl-footer">
+      <span id="tblInfo"></span>
+      <div class="pag" id="pagEl"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ REPORTS ══ -->
+<section class="page" id="page-reports">
+  <div class="page-head">
+    <div>
+      <div class="page-eyebrow">Exports</div>
+      <h1 class="page-title">Reports</h1>
+      <p class="page-sub">Download and schedule automated reports.</p>
+    </div>
+    <button class="btn btn-ghost" onclick="toast('📅 Schedule report — coming soon!')">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      Schedule
+    </button>
+  </div>
+  <div class="rep-grid" id="repGrid"></div>
+</section>
+
+</div>
+</main>
+
+<!-- Toast -->
+<div class="toast" id="toastEl">
+  <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+  <span id="toastMsg"></span>
+</div>
+    <script src="script.js"></script>
+</body>
+</html>
